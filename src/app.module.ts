@@ -21,6 +21,10 @@ import {
       database: process.env.DB_NAME ?? 'turk-travel',
       autoLoadEntities: true,
       synchronize: true,
+      ...(process.env.DB_HOST &&
+        !['localhost', '127.0.0.1'].includes(process.env.DB_HOST) && {
+          ssl: { rejectUnauthorized: false },
+        }),
     }),
   ],
   controllers: [AppController],
