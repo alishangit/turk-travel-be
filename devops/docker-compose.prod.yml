@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: turk-travel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - turk-travel
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ..
+      dockerfile: devops/Dockerfile
+    container_name: turk-travel-backend
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    environment:
+      POSTGRES_HOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - tour-uploads:/app/public/tours
+    ports:
+      - '127.0.0.1:3000:3000'
+    networks:
+      - turk-travel
+
+volumes:
+  postgres-data:
+  tour-uploads:
+
+networks:
+  turk-travel:
+    name: turk-travel
+    driver: bridge

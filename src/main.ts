@@ -8,8 +8,8 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(join(process.cwd(), 'uploads'), {
-    prefix: '/uploads/',
+  app.useStaticAssets(join(process.cwd(), 'public', 'tours'), {
+    prefix: '/public/tours/',
   });
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));

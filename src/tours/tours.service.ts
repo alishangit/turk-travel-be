@@ -123,7 +123,7 @@ export class ToursService {
     return filenames
       .filter(Boolean)
       .slice(0, MAX_TOUR_IMAGES)
-      .map((filename) => `/uploads/${filename}`);
+      .map((filename) => `/public/tours/${filename}`);
   }
 
   private parseExistingImages(raw?: string): string[] {
@@ -155,10 +155,10 @@ export class ToursService {
   private async removeImageFile(imagePath: string) {
     if (!imagePath) return;
 
-    const filename = imagePath.replace(/^\/uploads\//, '');
+    const filename = imagePath.replace(/^\/public\/tours\//, '');
 
     try {
-      await unlink(join(process.cwd(), 'uploads', filename));
+      await unlink(join(process.cwd(), 'public', 'tours', filename));
     } catch {
       // файл уже удалён или отсутствует
     }

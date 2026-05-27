@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  turk-travel_bedatabase:
+    image: postgres:16
+    container_name: turk-travel_bedatabase
+    restart: unless-stopped
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: 'turk-travel'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+    networks:
+      - turk-travel
+    ports:
+      - 127.0.0.1:5432:5432
+
+
+volumes:
+  database-data:
+
+
+networks:
+  turk-travel:
+    name: turk-travel
+    external: false

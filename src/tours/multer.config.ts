@@ -2,7 +2,7 @@ import { existsSync, mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 
-const uploadDir = join(process.cwd(), 'uploads');
+const uploadDir = join(process.cwd(), 'public', 'tours');
 
 if (!existsSync(uploadDir)) {
   mkdirSync(uploadDir, { recursive: true });
