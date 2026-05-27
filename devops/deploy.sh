@@ -10,13 +10,13 @@ set -euo pipefail
 cd "${APP_DIR}"
 git fetch origin main
 git reset --hard origin/main
-npm ci
-npm run build
-pm2 restart turk-travel-be
-pm2 status turk-travel-be
+
+docker compose -f devops/docker-compose.prod.yml up -d --build --remove-orphans
+
+docker compose -f devops/docker-compose.prod.yml ps
 git rev-parse --short HEAD
 EOF
 
-echo "Deploy finished. Checking CORS for localhost:3001..."
-curl -s -D - -o /dev/null "https://api.toursanatolia.com/tours" \
-  -H "Origin: http://localhost:3001" | grep -i access-control-allow-origin || true
+echo "Deploy finished. Checking API..."
+curl -s -o /dev/null -w "%{http_code}" https://api.toursanatolia.com/health || true
+echo ""
