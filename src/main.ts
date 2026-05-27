@@ -14,13 +14,18 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  const corsOrigins = (
-    process.env.CORS_ORIGINS ??
-    'http://localhost:3001,https://toursanatolia.com,https://www.toursanatolia.com'
-  )
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
+  const defaultCorsOrigins =
+    'http://localhost:3001,https://toursanatolia.com,https://www.toursanatolia.com';
+
+  const corsOrigins = [
+    ...new Set(
+      (process.env.CORS_ORIGINS ?? defaultCorsOrigins)
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean)
+        .concat('http://localhost:3001'),
+    ),
+  ];
 
   app.enableCors({
     origin: corsOrigins,
